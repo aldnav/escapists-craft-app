@@ -111,11 +111,25 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  flutter_sticky_header:
+    dependency: "direct main"
+    description:
+      name: flutter_sticky_header
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
+  google_fonts:
+    dependency: "direct main"
+    description:
+      name: google_fonts
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
   http:
     dependency: transitive
     description:
@@ -317,6 +331,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.2"
+  value_layout_builder:
+    dependency: transitive
+    description:
+      name: value_layout_builder
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   vector_math:
     dependency: transitive
     description:

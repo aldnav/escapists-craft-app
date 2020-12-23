@@ -73,7 +73,7 @@ class _DetailPageState extends State<DetailPage> {
 
     var confiscated = widget.item.confiscated;
     Color confiscatedColor =
-        confiscated.contains('Will be') ? Colors.red : Colors.green;
+        confiscated.contains('Will be') ? Colors.orange : Colors.black;
 
     var name = widget.item.name;
 
@@ -82,6 +82,7 @@ class _DetailPageState extends State<DetailPage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(name),
+        backgroundColor: Colors.black,
       ),
       body: SingleChildScrollView(
         child: Column(
