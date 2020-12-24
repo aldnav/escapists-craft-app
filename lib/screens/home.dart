@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:async/async.dart';
 import 'package:escapists_craft_app/models/tools_list.dart';
 import 'package:escapists_craft_app/screens/common.dart';
 import 'package:escapists_craft_app/screens/detail.dart';
@@ -19,16 +18,23 @@ class _MyHomePageState extends State<MyHomePage> {
   var _filteredItems = [];
   List allItems = [];
   var toolsList = ToolsList();
+  final searchTextController = TextEditingController();
+  // https://medium.com/saugo360/flutter-my-futurebuilder-keeps-firing-6e774830bc2
+  AsyncMemoizer _memoizer;
 
-  Future<bool> fetchData() => Future.delayed(Duration(seconds: 1), () {
+  _fetchData() {
+    return this._memoizer.runOnce(() {
+      Future.delayed(Duration(seconds: 2), () {
         toolsList.loadItems().then((items) {
           setState(() {
             allItems = items;
             _filteredItems = List.from(allItems);
           });
         });
-        return true;
       });
+      return true;
+    });
+  }
 
   Map categorizeItems(items) {
     var categories = Map();
@@ -71,9 +77,39 @@ class _MyHomePageState extends State<MyHomePage> {
     return slivers;
   }
 
+  searchItems() {
+    var name = searchTextController.text;
+    if (name.isNotEmpty) {
+      setState(() {
+        _filteredItems = allItems
+            .where((o) => o.name.toLowerCase().contains(name.toLowerCase()))
+            .toList();
+      });
+    } else {
+      setState(() {
+        _filteredItems = List.from(allItems);
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _memoizer = AsyncMemoizer();
+    searchTextController.addListener(searchItems);
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    searchTextController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) => FutureBuilder(
-        future: fetchData(),
+        future: _fetchData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             // Build the widget with data.
@@ -87,7 +123,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   slivers: [
                     SliverAppBar(
                       pinned: true,
-                      expandedHeight: 20.0,
                       flexibleSpace: FlexibleSpaceBar(
                         title: Text(widget.title),
                       ),
@@ -99,6 +134,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                     ),
+                    SliverAppBar(
+                      floating: true,
+                      snap: true,
+                      flexibleSpace: FlexibleSpaceBar(
+                        title: SearchBar(
+                            searchTextController: searchTextController),
+                      ),
+                      backgroundColor: Colors.white,
+                      toolbarHeight: 10.0,
+                    ),
                     ...categorizedSlivers,
                   ],
                 ),
@@ -106,9 +151,30 @@ class _MyHomePageState extends State<MyHomePage> {
             );
           } else {
             // We can show the loading view until the data comes back.
-            debugPrint('Step 1, build loading widget');
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
         },
       );
+}
+
+class SearchBar extends StatelessWidget {
+  final TextEditingController searchTextController;
+
+  const SearchBar({
+    Key key,
+    this.searchTextController,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: TextField(
+        controller: searchTextController,
+        decoration: InputDecoration(
+          hintText: "Search",
+          prefixIcon: Icon(Icons.search),
+        ),
+      ),
+    );
+  }
 }

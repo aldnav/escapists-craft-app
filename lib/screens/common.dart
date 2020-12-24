@@ -9,7 +9,7 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 14.0),
       child: Container(
         padding: EdgeInsets.all(4.0),
         decoration: BoxDecoration(
@@ -55,12 +55,15 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 60,
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
       alignment: Alignment.centerLeft,
-      color: Colors.deepOrange,
+      color: Colors.white,
       child: Text(
-        title,
-        style: const TextStyle(color: Colors.white),
+        title.toUpperCase(),
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
