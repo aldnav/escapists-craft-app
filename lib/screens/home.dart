@@ -173,6 +173,17 @@ class SearchBar extends StatelessWidget {
         decoration: InputDecoration(
           hintText: "Search",
           prefixIcon: Icon(Icons.search),
+          suffixIcon: IconButton(
+              icon: Opacity(
+                opacity: searchTextController.text.isNotEmpty ? 1.0 : 0.0,
+                child: Icon(
+                  Icons.cancel,
+                ),
+              ),
+              onPressed: () {
+                searchTextController.clear();
+                FocusScope.of(context).unfocus();
+              }),
         ),
       ),
     );
